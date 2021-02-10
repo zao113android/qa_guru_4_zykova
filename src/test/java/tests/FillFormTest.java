@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 
 import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.value;
 import static com.codeborne.selenide.Selectors.*;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.*;
 
 
 public class FillFormTest {
@@ -22,12 +22,20 @@ public class FillFormTest {
 
     @Test
     void confirmationIsDispplayedTest() {
+        String firstName = "Ann";
+        String lastName = "Z";
+        String name = firstName + " " + lastName;
+        String email = "mail@gmail.com";
+        String state = "NCR";
+        String city = "Delhi";
+        String location = state + " " + city;
+
         open("https://demoqa.com/automation-practice-form");
         $(".main-header").shouldHave(text("Practice Form"));
 
-        $("#firstName").setValue("Ann");
-        $("#lastName").setValue("Z");
-        $("#userEmail").setValue("mail@gmail.com");
+        $("#firstName").setValue(firstName);
+        $("#lastName").setValue(lastName);
+        $("#userEmail").setValue(email);
 
         // I don't like this variant. Still thinking how ro fix it with .selectRadio()
         // I thought about $("#gender-radio-3").selectRadio("Other");
@@ -44,8 +52,7 @@ public class FillFormTest {
         $(byClassName("react-datepicker__month")).click();
 
         // is it a hack too? think that there is an alternative way
-        $("#subjectsInput").setValue("English");
-        $("#subjectsInput").pressEnter();
+        $("#subjectsInput").setValue("English").pressEnter();
 
         // the same hack as with radiobutton
         $(byText("Reading")).click();
@@ -54,20 +61,28 @@ public class FillFormTest {
 
         $("#currentAddress").setValue("street");
 
+        // I have a small screen, so that I have to scroll
+        $("#state").scrollTo();
+
         $("#state").click();
-        $("#react-select-3-input").setValue("NCR");
+        $("#react-select-3-input").setValue(state);
         $("#react-select-3-input").pressEnter();
 
         // the same question as for subjectsInput
         // like selectOptionByValue
         // but haven't found how to apply it here, doesn't work for me
         $("#city").click();
-        $("#react-select-4-input").setValue("delhi");
+        $("#react-select-4-input").setValue(city);
         $("#react-select-4-input").pressEnter();
 
         $("#submit").click();
 
+
         $("#example-modal-sizes-title-lg").shouldHave(text("Thanks for submitting the form"));
+        // quick check of filled info
+        // also wanna change to field - value validation
+        $(byClassName("table-responsive")).shouldHave(text(name), text(location), text(email));
+
     }
 
 }
