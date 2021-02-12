@@ -32,8 +32,8 @@ public class FillFormTest {
                 location = state + " " + city,
                 number = "0123456789",
                 subject = "English",
-                address = "",
-                month = "Jan",
+                address = "Cyprus",
+                month = "January",
                 year = "1993",
                 day = "14",
                 hobby = "Reading",
@@ -68,7 +68,7 @@ public class FillFormTest {
         $(byText(hobby)).click();
 
         // file uploading
-        $("#uploadPicture").uploadFile(new File("/Users/annazykova/Documents/An/Photo/" + "picture"));
+        $("#uploadPicture").uploadFile(new File("/Users/annazykova/Documents/An/Photo/" + picture));
 
         // address
         $("#currentAddress").setValue(address);
