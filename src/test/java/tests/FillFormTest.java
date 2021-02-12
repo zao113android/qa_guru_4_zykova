@@ -22,67 +22,86 @@ public class FillFormTest {
 
     @Test
     void confirmationIsDispplayedTest() {
-        String firstName = "Ann";
-        String lastName = "Z";
-        String name = firstName + " " + lastName;
-        String email = "mail@gmail.com";
-        String state = "NCR";
-        String city = "Delhi";
-        String location = state + " " + city;
+        String firstName = "Ann",
+                lastName = "Z",
+                name = firstName + " " + lastName,
+                gender = "Other",
+                email = "mail@gmail.com",
+                state = "NCR",
+                city = "Delhi",
+                location = state + " " + city,
+                number = "0123456789",
+                subject = "English",
+                address = "",
+                month = "Jan",
+                year = "1993",
+                day = "14",
+                hobby = "Reading",
+                picture = "17ab8d64109801.5ac71cf4d999c.jpg";
 
         open("https://demoqa.com/automation-practice-form");
         $(".main-header").shouldHave(text("Practice Form"));
 
+        // just strings
         $("#firstName").setValue(firstName);
         $("#lastName").setValue(lastName);
         $("#userEmail").setValue(email);
 
-        // I don't like this variant. Still thinking how ro fix it with .selectRadio()
-        // I thought about $("#gender-radio-3").selectRadio("Other");
-        // Also $("#gender-radio-3").setSelected(true);
-        $(byText("Other")).click();
+        // select radiobutton
+        $(byText(gender)).click();
 
-        // Wanna add here autogeneration with limit 10
-        $("#userNumber").setValue("0123456789");
+        // numbers
+        $("#userNumber").setValue(number);
 
+        // date
         $("#dateOfBirthInput").click();
-        $(byClassName("react-datepicker__month-select")).selectOption(0);
-        $(byClassName("react-datepicker__year-select")).selectOption("1993");
-        // this one should be fixed, still can't find the way how to choose exact day
-        $(byClassName("react-datepicker__month")).click();
+        $((".react-datepicker__month-select")).selectOption(month);
+        $((".react-datepicker__year-select")).selectOption(year);
+        $((".react-datepicker__day--0" + day)).click();
 
-        // is it a hack too? think that there is an alternative way
-        $("#subjectsInput").setValue("English").pressEnter();
+        // reworked for dropdown
+        //$("#subjectsInput").setValue(subject).pressEnter();
+        $("#subjectsInput").setValue(subject);
+        $(".subjects-auto-complete__menu-list").$(byText(subject)).click();
 
-        // the same hack as with radiobutton
-        $(byText("Reading")).click();
+        // checkbox
+        $(byText(hobby)).click();
 
-        $("#uploadPicture").uploadFile(new File("/Users/annazykova/Documents/An/Photo/17ab8d64109801.5ac71cf4d999c.jpg"));
+        // file uploading
+        $("#uploadPicture").uploadFile(new File("/Users/annazykova/Documents/An/Photo/" + "picture"));
 
-        $("#currentAddress").setValue("street");
+        // address
+        $("#currentAddress").setValue(address);
 
         // I have a small screen, so that I have to scroll
         $("#state").scrollTo();
 
+        // state and city
+        // reworked, now it's better
         $("#state").click();
-        $("#react-select-3-input").setValue(state);
-        $("#react-select-3-input").pressEnter();
-
-        // the same question as for subjectsInput
-        // like selectOptionByValue
-        // but haven't found how to apply it here, doesn't work for me
+        $("#stateCity-wrapper").$(byText(state)).click();
         $("#city").click();
-        $("#react-select-4-input").setValue(city);
-        $("#react-select-4-input").pressEnter();
+        $("#stateCity-wrapper").$(byText(city)).click();
 
         $("#submit").click();
 
-
         $("#example-modal-sizes-title-lg").shouldHave(text("Thanks for submitting the form"));
+
         // quick check of filled info
         // also wanna change to field - value validation
         $(byClassName("table-responsive")).shouldHave(text(name), text(location), text(email));
 
+        // and the better checker
+        $x("//td[text()='Student Name']").parent().shouldHave(text(name));
+        $x("//td[text()='Student Email']").parent().shouldHave(text(email));
+        $x("//td[text()='Gender']").parent().shouldHave(text(gender));
+        $x("//td[text()='Mobile']").parent().shouldHave(text(number));
+        $x("//td[text()='Date of Birth']").parent().shouldHave(text(day + " " + month + "," + year));
+        $x("//td[text()='Subjects']").parent().shouldHave(text(subject));
+        $x("//td[text()='Hobbies']").parent().shouldHave(text(hobby));
+        $x("//td[text()='Picture']").parent().shouldHave(text(picture));
+        $x("//td[text()='Address']").parent().shouldHave(text(address));
+        $x("//td[text()='State and City']").parent().shouldHave(text(location));
     }
 
 }
