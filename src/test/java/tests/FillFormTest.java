@@ -2,6 +2,7 @@ package tests;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.SelenideElement;
+import com.github.javafaker.Faker;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -22,20 +23,22 @@ public class FillFormTest {
 
     @Test
     void confirmationIsDispplayedTest() {
-        String firstName = "Ann",
-                lastName = "Z",
+        Faker faker = new Faker();
+
+        String firstName = faker.name().firstName(),
+                lastName = faker.name().lastName(),
                 name = firstName + " " + lastName,
-                gender = "Other",
-                email = "mail@gmail.com",
+                gender =  "Other",
+                email = faker.internet().emailAddress(),
                 state = "NCR",
                 city = "Delhi",
                 location = state + " " + city,
-                number = "0123456789",
+                number = faker.number().digits(10),
                 subject = "English",
-                address = "Cyprus",
+                address = faker.address().fullAddress(),
                 month = "January",
-                year = "1993",
-                day = "14",
+                year = faker.number().numberBetween(1900, 2100) + "",
+                day = faker.number().numberBetween(1, 29) + "",
                 hobby = "Reading",
                 picture = "17ab8d64109801.5ac71cf4d999c.jpg";
 
